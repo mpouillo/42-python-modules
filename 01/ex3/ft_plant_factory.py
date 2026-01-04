@@ -19,19 +19,19 @@ class Plant:
         print(f"{self.name}: {self.height}cm, {self.lifetime} days old")
 
 
-def ft_plant_factory():
+def ft_plant_factory(plants):
     print("=== Plant Factory Output ===")
-    plants = [Plant("Lily of the Valley", 15, 10),
-              Plant("Begonia", 30, 60),
-              Plant("Spider Lily", 60, 200),
-              Plant("Clover", 5, 1),
-              Plant("Weeping Willow", 1500, 10950)]
-
     for plant in plants:
         print("Created: ", end="")
-        plant.get_info()
+        p = Plant(*plant)
+        p.get_info()
     print(f"\nTotal plants created: {len(plants)}")
 
 
 if __name__ == "__main__":
-    ft_plant_factory()
+    plants = [("Lily of the Valley", 15, 10),
+              ("Begonia", 30, 60),
+              ("Spider Lily", 60, 200),
+              ("Clover", 5, 1),
+              ("Weeping Willow", 1500, 10950)]
+    ft_plant_factory(plants)
