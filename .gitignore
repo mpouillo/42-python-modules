@@ -216,3 +216,7 @@ __marimo__/
 .streamlit/secrets.toml
 
 TODO
+advanced_data_helper.py
+data_generator.py
+exercise_0_help.py
+exercise_1_helper.py
