@@ -57,7 +57,7 @@ class Plant:
     @property
     def total_growth(self):
         return self._total_growth
-    
+
     @total_growth.setter
     def total_growth(self, growth):
         self._total_growth = growth
@@ -174,19 +174,28 @@ class GardenManager:
     def garden_report(self, owner):
         if owner in self.gardens:
             owned_plants = self.gardens.get(owner, [])
+            regular, flowering, prize = 0, 0, 0
             growth = self.GardenStats.calculate_total_growth(owned_plants)
             string = f"=== {owner}'s Garden Report ===\n"
             string += "Plants in garden:\n"
             for plant in self.gardens[owner]:
                 string += f"- {plant.name}: {plant.height}cm"
-                if isinstance(plant, FloweringPlant):
-                    string += f", {plant.color}"
-                    string += f"{' (blooming)' if plant.bloom is True else ''}"
                 if isinstance(plant, PrizeFlower):
                     string += f", Prize points: {plant.prize_value}"
+                    prize += 1
+                elif isinstance(plant, FloweringPlant):
+                    string += f", {plant.color}"
+                    string += f"{' (blooming)' if plant.bloom is True else ''}"
+                    flowering += 1
+                else:
+                    regular += 1
                 string += "\n"
             string += f"\nPlants added: {len(owned_plants)}"
             string += f", Total growth: {growth}cm"
+            string += "\nPlant types: "
+            string += f"{regular} regular, "
+            string += f"{flowering} flowering, "
+            string += f"{prize} prize flowers"
             print(f"{string}")
 
     class GardenStats:
@@ -199,7 +208,7 @@ class GardenManager:
                 if isinstance(p, PrizeFlower):
                     score += p.prize_value
             return score
-    
+
         def calculate_total_growth(plants):
             total_growth = 0
             for p in plants:
@@ -222,7 +231,7 @@ class GardenManager:
         status = True
         for garden in self.gardens:
             for plant in self.gardens.get(garden, []):
-                if plant.height > 150:
+                if plant.height > 400:
                     status = False
                     break
         print(f"Height validation test: {status}")
@@ -232,9 +241,9 @@ def ft_garden_analytics():
     print("=== Garden Management System Demo ===\n")
 
     gm = GardenManager.create_garden_network()
-    gm.add_plant("Alice", Plant("Oak Tree", 101, 1500))
-    gm.add_plant("Alice", FloweringPlant("Rose", 26, 10, "pink", True))
-    gm.add_plant("Alice", PrizeFlower("Sunflower", 51, 30, "yellow", True, 10))
+    gm.add_plant("Alice", Plant("Pine Tree", 358, 1500))
+    gm.add_plant("Alice", FloweringPlant("Wisteria", 87, 10, "purple", True))
+    gm.add_plant("Alice", PrizeFlower("Begonia", 33, 30, "pink", False, 10))
     print("")
 
     gm.grow_plants("Alice", 1)
@@ -256,10 +265,11 @@ def ft_garden_analytics():
     print("")
 
     gm.add_plant("Bob", FloweringPlant("Cosmos", 30, 5, "purple", False))
-    gm.add_plant("Bob", PrizeFlower("SpiderLily", 40, 20, "red", True, 20))
+    gm.add_plant("Bob", PrizeFlower("Spider Lily", 40, 20, "red", True, 20))
     print("")
 
     gm.print_garden_scores()
+    print(f"Total gardens managed: {gm.garden_count}")
 
 
 if __name__ == "__main__":

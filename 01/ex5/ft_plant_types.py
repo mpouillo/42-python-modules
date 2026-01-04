@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 
 class Plant:
-    def __init__(self, name: str="None", height: int=0, age: int=0):
+    def __init__(
+            self,
+            name: str = "None",
+            height: int = 0,
+            age: int = 0
+            ):
         self.set_name(name)
         self.set_height(height)
         self.set_age(age)
@@ -18,7 +23,10 @@ class Plant:
 
     def set_age(self, age: int):
         if age < 0:
-            print(f"Invalid operation attempted: age {age} day{"s" if age != -1 else ""} [REJECTED]")
+            print(
+                "Invalid operation attempted: age "
+                f"{age} day{'s' if age != -1 else ''} [REJECTED]"
+                )
             print("Security: Negative age rejected")
         else:
             self._age = age
@@ -33,7 +41,10 @@ class Plant:
         return (self._age)
 
     def get_info(self):
-        return f"{self.get_name()} ({type(self).__name__}): {self.get_height()}cm, {self.get_age()} day{"s" if self.get_age() != 1 else ""}"
+        return (
+            f"{self.get_name()} ({type(self).__name__}): "
+            f"{self.get_height()}cm, {self.get_age()} "
+            f"day{'s' if self.get_age() != 1 else ''}")
 
 
 class Flower(Plant):
@@ -66,7 +77,7 @@ class Tree(Plant):
     def set_trunk_diameter(self, diameter: int):
         self._trunk_diameter = diameter
 
-    def get_trunk_diameter(self):
+    def get_diameter(self):
         return (self._trunk_diameter)
 
     def produce_shade(self):
@@ -74,7 +85,7 @@ class Tree(Plant):
         print("The tree casts a shadow.")
 
     def get_info(self):
-        return f"{super().get_info()}, {self.get_trunk_diameter()}cm wide trunk"
+        return f"{super().get_info()}, {self.get_diameter()}cm wide trunk"
 
 
 class Vegetable(Plant):
@@ -113,7 +124,10 @@ def ft_plant_types():
     print(f"{vegetable.get_info()}")
     vegetable.set_nutritional_value("86", "kilocalories", "energy")
     vegetable.set_nutritional_value("20", "grams", "carbs")
-    print(f"{vegetable.get_name()}'s nutritional values: {vegetable.get_nutritional_value()}")
+    print(
+        f"{vegetable.get_name()}'s nutritional values: "
+        f"{vegetable.get_nutritional_value()}"
+        )
 
 
 if __name__ == "__main__":

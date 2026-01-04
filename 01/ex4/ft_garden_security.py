@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
 class SecurePlant:
-    def __init__(self, name: str="None", height: int=0, age: int=0):
+    def __init__(self,
+                 name: str = "None",
+                 height: int = 0,
+                 age: int = 0):
         self.set_name(name)
         self.set_height(height)
         self.set_age(age)
@@ -20,7 +23,10 @@ class SecurePlant:
 
     def set_age(self, age: int):
         if age < 0:
-            print(f"Invalid operation attempted: age {age} day{"s" if age != -1 else ""} [REJECTED]")
+            print(
+                f"Invalid operation attempted: age "
+                f"{age} day{'s' if age != -1 else ''} [REJECTED]"
+                )
             print("Security: Negative age rejected")
         else:
             self._age = age
@@ -36,7 +42,8 @@ class SecurePlant:
         return (self._age)
 
     def get_info(self):
-        print(f"Current plant: {self.get_name()} ({self.get_height()}cm, {self.get_age()} days)")
+        print(f"Current plant: {self.get_name()} "
+              f"({self.get_height()}cm, {self.get_age()} days)")
 
 
 def ft_garden_security():

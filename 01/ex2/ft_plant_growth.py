@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
 class Plant:
-    def __init__(self, name: str="None", height: int=0, lifetime: int=0):
+    def __init__(self,
+                 name: str = "None",
+                 height: int = 0,
+                 lifetime: int = 0):
         self.name: str = name
         self.height: int = height
         self.lifetime: int = lifetime
@@ -22,7 +25,7 @@ def ft_plant_growth():
     day: int = 1
     print(f"=== Day {day} ===")
     plant.get_info()
-    for _ in range (1, 7):
+    for _ in range(1, 7):
         day += 1
         plant.grow(1)
     print(f"=== Day {day} ===")

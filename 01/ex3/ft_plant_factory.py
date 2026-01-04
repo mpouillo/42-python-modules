@@ -1,7 +1,10 @@
 #! /usr/bin/env python3
 
 class Plant:
-    def __init__(self, name: str="None", height: int=0, lifetime: int=0):
+    def __init__(self,
+                 name: str = "None",
+                 height: int = 0,
+                 lifetime: int = 0):
         self.name: str = name
         self.height: int = height
         self.lifetime: int = lifetime
@@ -28,6 +31,7 @@ def ft_plant_factory():
         print("Created: ", end="")
         plant.get_info()
     print(f"\nTotal plants created: {len(plants)}")
+
 
 if __name__ == "__main__":
     ft_plant_factory()
