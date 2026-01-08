@@ -155,7 +155,7 @@ class GardenManager:
         self.gardens[owner].remove(plant)
         print(f"Removed {plant.name} from {owner}'s garden")
 
-    def grow_plants(self, owner: str, growth: int):
+    def grow_plants(self, owner: str, growth: int = 1):
         if owner in self.gardens:
             print(f"{owner} is helping all plants grow...")
             for plant in self.gardens[owner]:
