@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
-def water_plants(plant_list):
+from typing import Any
+
+
+def water_plants(plant_list: list[Any]) -> None:
     print("Opening watering system")
     success = 0
     try:
@@ -18,7 +21,7 @@ def water_plants(plant_list):
         print("Watering completed successfully!")
 
 
-def test_watering_system():
+def test_watering_system() -> None:
     print("=== Garden Watering System ===\n")
     print("Testing normal watering...")
     water_plants(["tomato", "lettuce", "carrots"])

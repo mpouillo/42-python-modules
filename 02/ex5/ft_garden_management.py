@@ -1,47 +1,50 @@
 #!/usr/bin/env python3
 
+from typing import Any
+
+
 class GardenError(Exception):
     pass
 
 
 class SunlightError(GardenError):
-    def __init__(self, name: str, message: str = None):
+    def __init__(self, name: str, message: Any = None):
         if message is None:
             message = f"Insufficient sunlight, {name} is wilting!"
         super().__init__(message)
 
 
 class WaterHighError(GardenError):
-    def __init__(self, message: str = None):
+    def __init__(self, message: Any = None):
         if message is None:
             message = "Too much water in tank"
         super().__init__(message)
 
 
 class WaterLowError(GardenError):
-    def __init__(self, message: str = None):
+    def __init__(self, message: Any = None):
         if message is None:
             message = "Not enough water in tank"
         super().__init__(message)
 
 
 class EmptyPlantName(GardenError):
-    def __init__(self, message: str = None):
+    def __init__(self, message: Any = None):
         if message is None:
             message = "Plant name cannot be empty!"
         super().__init__(message)
 
 
 class GardenManager:
-    def __init__(self):
+    def __init__(self) -> None:
         self.plant_list = []
 
     @property
-    def plant_list(self):
+    def plant_list(self) -> list[Any]:
         return self._plant_list
 
     @plant_list.setter
-    def plant_list(self, plant_list: list):
+    def plant_list(self, plant_list: list[str]) -> None:
         if type(plant_list) is not list:
             raise ValueError
         else:
@@ -57,22 +60,22 @@ class GardenManager:
             self.water = water
 
         @property
-        def name(self):
+        def name(self) -> str:
             return self._name
 
         @name.setter
-        def name(self, name):
+        def name(self, name: str) -> None:
             if name in [None, ""]:
                 raise EmptyPlantName
             else:
                 self._name = name
 
         @property
-        def sunlight(self):
+        def sunlight(self) -> int:
             return self._sunlight
 
         @sunlight.setter
-        def sunlight(self, value: int):
+        def sunlight(self, value: int) -> None:
             self._sunlight = value
             if self.sunlight > 10:
                 self._sunlight = 10
@@ -80,18 +83,21 @@ class GardenManager:
                 raise SunlightError(self.name)
 
         @property
-        def water(self):
+        def water(self) -> int:
             return self._water
 
         @water.setter
-        def water(self, value: int):
+        def water(self, value: int) -> None:
             self._water = value
             if self.water < 1:
                 raise WaterLowError
             if self.water > 10:
                 raise WaterHighError
 
-    def add_plant(self, name: str, sunlight: int = 10, water: int = 10):
+    def add_plant(self,
+                  name: str,
+                  sunlight: int = 10,
+                  water: int = 10) -> None:
         try:
             plant = GardenManager.Plant(name, sunlight, water)
             self.plant_list.append(plant)
@@ -99,7 +105,7 @@ class GardenManager:
         except GardenError as e:
             print(f"Error adding plant: {e}")
 
-    def water_plants(self, value: int = 1):
+    def water_plants(self, value: int = 1) -> None:
         print("Opening watering system")
         try:
             for plant in self.plant_list:
@@ -112,7 +118,7 @@ class GardenManager:
         finally:
             print("Closing watering system (cleanup)")
 
-    def check_health(self):
+    def check_health(self) -> None:
         for plant in self.plant_list:
             try:
                 if plant.water > 10:

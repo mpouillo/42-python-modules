@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
 import math
+from typing import Any
 
 
-def calculate_distance(tup1, tup2):
+def calculate_distance(tup1: tuple[Any, Any, Any],
+                       tup2: tuple[Any, Any, Any]) -> None:
     try:
         x1, y1, z1 = tup1
         x2, y2, z2 = tup2
@@ -20,7 +22,7 @@ def calculate_distance(tup1, tup2):
         pass
 
 
-def str_to_coords(string):
+def str_to_coords(string: str) -> Any:
     try:
         coords = tuple([int(num) for num in string.split(',', 2)])
         print(f"Parsed position: {coords}")

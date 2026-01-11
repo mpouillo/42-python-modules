@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-def test_error_types():
+def test_error_types() -> None:
     print("Testing ValueError...")
     try:
         int("abc")
@@ -22,7 +22,7 @@ def test_error_types():
 
     print("Testing KeyError...")
     try:
-        d = {}
+        d: dict[str, str] = {"test": "test"}
         _ = d["missing key"]
     except KeyError as e:
         print(f"Caught KeyError: {e}\n")
@@ -34,7 +34,7 @@ def test_error_types():
         print("Caught an error, but program continues!\n")
 
 
-def garden_operations():
+def garden_operations() -> None:
     print("=== Garden Error Types Demo ===\n")
     test_error_types()
     print("All error types tested successfully!")

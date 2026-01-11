@@ -3,7 +3,7 @@
 import sys
 
 
-def ft_score_analytics():
+def ft_score_analytics() -> None:
     print("=== Player Score Analytics ===")
     if len(sys.argv) == 1:
         print(f"No scores provided. "

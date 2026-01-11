@@ -11,7 +11,7 @@ class PlantError(GardenError):
 
 
 class WaterError(GardenError):
-    def __init__(self):
+    def __init__(self) -> None:
         message = "Not enough water in the tank!"
         super().__init__(message)
 
@@ -26,33 +26,33 @@ class Plant:
         self.water = water
 
     @property
-    def health(self):
+    def health(self) -> int:
         return self._health
 
     @health.setter
-    def health(self, value: int):
+    def health(self, value: int) -> None:
         self._health = value
         if (self.health <= 0):
             raise PlantError(self.name)
 
     @property
-    def water(self):
+    def water(self) -> int:
         return self._water
 
     @water.setter
-    def water(self, value: int):
+    def water(self, value: int) -> None:
         self._water = value
         if (self.water <= 0):
             raise WaterError
 
-    def wilt(self, damage: int = 1):
+    def wilt(self, damage: int = 1) -> None:
         self.health -= damage
 
-    def dry_up(self, dryness: int = 1):
+    def dry_up(self, dryness: int = 1) -> None:
         self.water -= dryness
 
 
-def test_custom_errors():
+def test_custom_errors() -> None:
     print("=== Custon Garden Errors Demo ===")
     tomato = Plant("tomato")
 

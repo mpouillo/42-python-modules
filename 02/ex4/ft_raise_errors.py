@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-def check_plant_health(plant_name, water_level, sunlight_h):
+def check_plant_health(plant_name: str,
+                       water_level: int,
+                       sunlight_h: int) -> None:
     if plant_name in [None, ""]:
         raise ValueError("Plant name cannot be empty!")
     if water_level < 1:
@@ -13,7 +15,7 @@ def check_plant_health(plant_name, water_level, sunlight_h):
         raise ValueError(f"Sunlight hours {sunlight_h} is too high (max 12)")
 
 
-def test_plant_checks():
+def test_plant_checks() -> None:
     print("=== Garden Plant Health Checker ===")
     print()
     print("Testing good values...")
