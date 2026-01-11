@@ -1,31 +1,49 @@
 #! /usr/bin/env python3
+"""Python Module 01 Exercise 3."""
+
 
 class Plant:
+    """Create a plant object."""
+
     def __init__(self,
                  name: str = "None",
                  height: int = 0,
                  lifetime: int = 0):
+        """
+        Initialize plant object with name, height and lifetime.
+
+        Keyword arguments:
+        name        -- name of the plant object
+        height      -- height of the plant object
+        lifetime    -- age of the plant object
+        """
         self.name: str = name
         self.height: int = height
         self.lifetime: int = lifetime
 
-    def grow(self, size=1):
+    def grow(self, size: int = 1) -> None:
+        """Increase plant size by 'size'."""
         self.height += size
 
-    def age(self, days=1):
+    def age(self, days: int = 1) -> None:
+        """Increase plant lifetime by 'days'."""
         self.lifetime += days
 
-    def get_info(self):
-        print(f"{self.name}: {self.height}cm, {self.lifetime} days old")
+    def get_info(self) -> str:
+        """Return information (name, height, lifetime) about the plant."""
+        return f"{self.name}: {self.height}cm, {self.lifetime} days old"
 
 
-def ft_plant_factory(plants):
+def ft_plant_factory(plants: list[tuple[str, int, int]]) -> None:
+    """Easily create plants from a list of tuples."""
     print("=== Plant Factory Output ===")
+
+    count = 0
     for plant in plants:
-        print("Created: ", end="")
-        p = Plant(*plant)
-        p.get_info()
-    print(f"\nTotal plants created: {len(plants)}")
+        print(f"Created: {Plant(*plant).get_info()}")
+        count += 1
+
+    print(f"\nTotal plants created: {count}")
 
 
 if __name__ == "__main__":
