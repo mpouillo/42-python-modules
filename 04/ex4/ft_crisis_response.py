@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-def access_file(filename):
+def access_file(filename: str) -> None:
     try:
         with open(filename, "r") as f:
             print(f"ROUTINE ACCESS: Attempting access to {filename}")

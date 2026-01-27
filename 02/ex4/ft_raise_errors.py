@@ -13,6 +13,7 @@ def check_plant_health(plant_name: str,
         raise ValueError(f"Sunlight hours {sunlight_h} is too low (min 2)")
     if sunlight_h > 12:
         raise ValueError(f"Sunlight hours {sunlight_h} is too high (max 12)")
+    print(f"Plant \"{plant_name}\" is healthy!")
 
 
 def test_plant_checks() -> None:

@@ -30,7 +30,7 @@ def test_error_types() -> None:
     print("Testing multiple errors together...")
     try:
         int("bad data")
-    except (ValueError, ZeroDivisionError):
+    except (ValueError, TypeError):
         print("Caught an error, but program continues!\n")
 
 

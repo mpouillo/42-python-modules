@@ -1,29 +1,33 @@
 #!/usr/bin/env python3
 
-from typing import Any
-
-
-def check_temperature(temp: Any) -> Any:
+def check_temperature(temp_str: int) -> int | None:
     min, max = 0, 40
-    print(f"Testing temperature: {temp}")
+    print(f"Testing temperature: {temp_str}")
     try:
-        temp_int = int(temp)
+        temp_int = int(temp_str)
         if temp_int < min:
             print(f"Error: {temp_int}°C is too cold for plants (min {min}°C)")
+            return None
         elif temp_int > max:
             print(f"Error: {temp_int}°C is too hot for plants (max {max}°C)")
+            return None
         else:
-            print(f"Temperature {temp_int}°C is perfect for plants!")
-        return temp_int
+            return temp_int
     except ValueError:
-        print(f"Error: '{temp}' is not a valid number")
+        print(f"Error: '{temp_str}' is not a valid number")
+        return None
 
 
 def test_temperature_input() -> None:
     values = [25, "abc", 100, -50]
     for val in values:
-        check_temperature(val)
+        temp = check_temperature(val)
+        if temp:
+            print(f"Temperature {temp}°C is perfect for plants!")
+        print()
 
 
 if __name__ == "__main__":
+    print("=== Garden Temperature Checker ===\n")
     test_temperature_input()
+    print("All tests completed - program didn't crash!")

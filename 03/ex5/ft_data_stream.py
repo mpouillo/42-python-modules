@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-
+from typing import Iterator, Any
+from collections.abc import Callable
 import time
 
 EVENTS = [
@@ -365,7 +366,7 @@ ACTIONS = {
 }
 
 
-def fibonacci_gen():
+def fibonacci_gen() -> Iterator[int]:
     a, b = 0, 1
     while True:
         yield a
@@ -374,7 +375,7 @@ def fibonacci_gen():
         b = temp + b
 
 
-def prime_gen():
+def prime_gen() -> Iterator[int]:
     a = 2
     while True:
         is_prime = True
@@ -387,8 +388,8 @@ def prime_gen():
         a += 1
 
 
-def time_wrapper(func):
-    def wrapper(*args, **kwargs):
+def time_wrapper(func: Callable[[Any], Any]) -> Callable[[Any], Any]:
+    def wrapper(*args: Any, **kwargs: Any) -> Any:
         start = time.time()
         result = func(*args, **kwargs)
         end = time.time()
@@ -399,7 +400,7 @@ def time_wrapper(func):
 
 
 @time_wrapper
-def stream_analytics():
+def stream_analytics() -> None:
     print(f"Total events processed: {len(EVENTS)}")
 
     print(
@@ -448,5 +449,7 @@ if __name__ == "__main__":
     fib = fibonacci_gen()
     prime = prime_gen()
     n = 10
-    print(f"Fibonacci sequence (first {n}):", *(next(fib) for _ in range(n)))
-    print(f"Prime numbers (first {n}):", *(next(prime) for _ in range(n)))
+    print(f"Fibonacci sequence (first {n}):",
+          ", ".join(str(next(fib)) for _ in range(n)))
+    print(f"Prime numbers (first {n}):",
+          ", ".join(str(next(prime)) for _ in range(n)))
