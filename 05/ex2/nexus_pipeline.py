@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from abc import ABC, abstractmethod
-from typing import Any, List, Dict, Union, Optional, Protocol
+from typing import Any, List, Dict, Union, Protocol
 
 
 class ProcessingStage(Protocol):
@@ -29,15 +29,15 @@ class TransformStage:
     def process(self, data: Any) -> Dict:
         print("Transform: ", end="")
         if isinstance(data, dict):
-            print("Enriched with metadata and validation")
-        elif isinstance(data, str) and "," in data:
             try:
-                data_list = data.split(",")
-                for d in data_list:
-                    if isinstance(d, int):
-                        raise ValueError
+                sensor = data.get("sensor")
+                if not sensor:
+                    raise ValueError
+                print("Enriched with metadata and validation")
             except Exception:
                 print("Error detected in Stage 2: Invalid data format")
+                raise Exception
+        elif isinstance(data, str) and "," in data:
             print("Parsed and structured data")
         else:
             print("Aggregated and filtered")
@@ -92,9 +92,9 @@ class JSONAdapter(ProcessingPipeline):
                 data = stage.process(data)
             except Exception:
                 print("Recovery initiated: Switching to backup processor")
-                print("Recovery successful:"
+                print("Recovery successful: "
                       "Pipeline restored, processing resumed")
-                continue
+                return
         return data
 
     def validate(self, data: Any) -> Union[str, Any]:
@@ -148,8 +148,6 @@ class StreamAdapter(ProcessingPipeline):
 
 class NexusManager():
     def __init__(self, pipelines: List[ProcessingPipeline] = []) -> None:
-        print("Initializing Nexus Manager...")
-        print("Pipeline capacity: 1000 streams/seconds\n")
         self.pipelines = pipelines
 
     def add_pipelines(self, pipeline: ProcessingPipeline) -> None:
@@ -159,13 +157,15 @@ class NexusManager():
         for p in self.pipelines:
             out = p.process(data)
             if out is not None:
-                print(out, "\n")
+                return out
 
 
 if __name__ == "__main__":
     print("=== CODE NEXUS - ENTERPRISE PIPELINE SYSTEM ===")
 
     pipelines = [JSONAdapter(42), CSVAdapter(43), StreamAdapter(44)]
+    print("Initializing Nexus Manager...")
+    print("Pipeline capacity: 1000 streams/seconds\n")
     manager = NexusManager(pipelines)
 
     print("Creating Data Processing Pipeline...")
@@ -187,15 +187,15 @@ if __name__ == "__main__":
     ]
 
     for d in data:
-        manager.process_data(d)
+        print(manager.process_data(d), "\n")
 
     print("=== Pipeline Chaining Demo ===")
     print("Pipeline A -> Pipeline B -> Pipeline C")
 
-    pipelines = [JSONAdapter(1), JSONAdapter(2), JSONAdapter(3)]
-    pipelines[0].add_stage(InputStage())
-    pipelines[1].add_stage(TransformStage())
-    pipelines[2].add_stage(OutputStage())
+    solo_pipeline = [JSONAdapter(1)]
+    solo_pipeline[0].add_stage(InputStage())
+    solo_pipeline[0].add_stage(TransformStage())
+    solo_pipeline[0].add_stage(OutputStage())
 
     print("Data flow: Raw -> Processed -> Analyzed -> Stored\n")
 
@@ -212,10 +212,18 @@ if __name__ == "__main__":
         {"sensor": "temp", "value": 23.5, "unit": "C"}
     ]
 
-    print("Chain result: 100 records processed through 3-stage pipeline")
+    for r in records:
+        NexusManager(solo_pipeline).process_data(records)
+
+    print(f"Chain result: {len(records)} records "
+          "processed through 3-stage pipeline")
     print("Performance: 95% efficiency, 0.2s total processing time\n")
 
-    print("=== Error Recovery Test ===")  # TODO
-    NexusManager(pipelines).process_data("user,10,timestamp")
+    print("=== Error Recovery Test ===")
+    print("Simulating pipeline failure...")
 
-    print("Nexus Integration complete. All systems operational.")
+    processed_data = NexusManager(pipelines).process_data(
+        {"bad input": "yup"}
+    )
+
+    print("\nNexus Integration complete. All systems operational.")
