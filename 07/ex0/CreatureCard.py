@@ -11,6 +11,7 @@ class CreatureCard(Card):
         super().__init__(name, cost, rarity)
         self.attack = attack
         self.health = health
+        self.__name__ = "Creature"
 
     @property
     def attack(self) -> int:
@@ -30,10 +31,9 @@ class CreatureCard(Card):
 
     def play(self, game_state: dict) -> dict:
         try:
-            card_played = game_state.get("card_played")
-            if card_played.is_playable(game_state.get("available_mana")):
-                return {"card_played": card_played.name,
-                        "mana_used": card_played.cost,
+            if self.is_playable(game_state.get("available_mana")):
+                return {"card_played": self.name,
+                        "mana_used": self.cost,
                         "effect": "Creature summoned to battlefield"}
         except Exception:
             pass

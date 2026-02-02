@@ -19,10 +19,7 @@ if __name__ == "__main__":
     print(f"\nPlaying {dragon.name} with {mana} mana available:")
     print("Playable:", dragon.is_playable(6))
     print("Play result:")
-    pprint(dragon.play({
-        "card_played": dragon,
-        "available_mana": mana
-    }), sort_dicts=False)
+    pprint(dragon.play({"available_mana": mana}), sort_dicts=False)
 
     print(f"\n{dragon.name} attacks {goblin.name}:")
     print("Attack result:")
