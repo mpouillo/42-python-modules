@@ -39,13 +39,21 @@ class CreatureCard(Card):
             pass
 
     def attack_target(self, target) -> dict:
-        target.health -= self.attack
-        return {
-            "attacker": self.name,
-            "target": target.name,
-            "damage_dealt": self.attack,
-            "combat_resolved": True if target.health == 0 else False
-        }
+        if type(target) is CreatureCard:
+            target.health -= self.attack
+            return {
+                "attacker": self.name,
+                "target": target.name,
+                "damage_dealt": self.attack,
+                "combat_resolved": True if target.health == 0 else False
+            }
+        else:
+            return {
+                "attacker": self.name,
+                "target": None,
+                "damage_dealt": 0,
+                "combat_resolved": False
+            }
 
     def get_card_info(self):
         info = super().get_card_info()

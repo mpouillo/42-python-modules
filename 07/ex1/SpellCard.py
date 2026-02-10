@@ -23,23 +23,38 @@ class SpellCard(Card):
     def play(self, game_state: dict) -> dict:
         try:
             if self.is_playable(game_state.get("available_mana")):
-                effect = self.resolve_effect(game_state.get("target"))
                 return {"card_played": self.name,
                         "mana_used": self.cost,
-                        "effect": effect}
+                        "effect": self.resolve_effect(
+                            game_state.get("target")
+                        )}
         except Exception:
             pass
 
     def resolve_effect(self, targets: list) -> dict:
+        output = {}
         for target in targets:
             if type(target) is CreatureCard:
                 if "damage" in self.effect_type.lower():
                     damage = 3
                     target.health -= damage
-                    return f"Deal {damage} damage to target"
+                    output.update({
+                        "effect": f"Deal {damage} damage to target",
+                        "damage": damage,
+                        "heal": 0
+                    })
                 elif "heal" in self.effect_type.lower():
                     heal = 3
                     target.health += heal
-                    return f"Heal {heal} health to target"
+                    output.update({
+                        "effect": f"Heal {heal} health to target",
+                        "damage": 0,
+                        "heal": heal
+                    })
                 else:
-                    return "Nothing happens"
+                    output.update({
+                        "effect": "Nothing happens",
+                        "damage": 0,
+                        "heal": 0
+                    })
+        return output
