@@ -7,22 +7,27 @@ from pprint import pprint, pformat
 if __name__ == "__main__":
     print("=== DataDeck Game Engine ===")
 
+    print("\nConfiguring Fantasy Card Game...")
+
     factory = FantasyCardFactory()
     strategy = AggressiveStrategy()
-    hand = factory.create_themed_deck(3)
-    enemy = factory.create_themed_deck(3)
 
-    print("\nConfiguring Fantasy Card Game...")
-    print("Factory: FantasyCardFactory")
+    print("Factory:", factory.__class__.__name__)
     print("Strategy:", strategy.get_strategy_name())
     print("Available types:", pformat(factory.get_supported_types()))
 
     print("\nSimulating aggressive turn...")
+
+    hand = factory.create_themed_deck(3)
+    enemy = factory.create_themed_deck(3)
     cards = [f"{card.name} ({card.cost})" for card in hand.values()]
+
     print("Hand:", f"[{', '.join(cards)}]")
 
     print("\nTurn execution:")
+
     print("Strategy:", strategy.get_strategy_name())
+    print("Targets:", [card.name for card in enemy.values()])
     print("Actions:")
     pprint(strategy.execute_turn([card for card in hand.values()],
                                  [card for card in enemy.values()]),

@@ -32,29 +32,29 @@ class SpellCard(Card):
             pass
 
     def resolve_effect(self, targets: list) -> dict:
-        output = {}
         for target in targets:
             if type(target) is CreatureCard:
                 if "damage" in self.effect_type.lower():
                     damage = 3
                     target.health -= damage
-                    output.update({
+                    return {
                         "effect": f"Deal {damage} damage to target",
+                        "target": target.name,
                         "damage": damage,
                         "heal": 0
-                    })
+                    }
                 elif "heal" in self.effect_type.lower():
                     heal = 3
                     target.health += heal
-                    output.update({
+                    return {
                         "effect": f"Heal {heal} health to target",
+                        "target": target.name,
                         "damage": 0,
                         "heal": heal
-                    })
-                else:
-                    output.update({
-                        "effect": "Nothing happens",
-                        "damage": 0,
-                        "heal": 0
-                    })
-        return output
+                    }
+        return {
+            "effect": "Nothing happens",
+            "target": None,
+            "damage": 0,
+            "heal": 0
+        }

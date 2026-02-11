@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from typing import Iterator, Any
+from typing import Iterator, Any, Generator
 from collections.abc import Callable
 import time
 
@@ -419,29 +419,25 @@ def stream_analytics() -> None:
     )
 
 
+def event_generator(event_iter) -> Generator[str]:
+    while True:
+        e = next(event_iter)
+        yield (
+            f"Event {e.get('id')}: "
+            f"Player {e.get('player')} (level {e['data'].get('level')}): "
+            f"{ACTIONS.get(e.get('event_type'), e.get('event_type'))}"
+        )
+
+
 if __name__ == "__main__":
     print("=== Game Data Stream Processor ===\n")
 
     print(f"Processing {len(EVENTS)} game events...\n")
 
-    event_iter = iter(EVENTS)
-    formatted_events = []
-
-    while True:
-        try:
-            e = next(event_iter)
-            formatted_events.append(
-                f"Event {e.get('id')}: "
-                f"Player {e.get('player')} (level {e['data'].get('level')}): "
-                f"{ACTIONS.get(e.get('event_type'), e.get('event_type'))}"
-            )
-        except StopIteration:
-            break
-
-    print("\n".join(formatted_events))
+    event_gen = event_generator(iter(EVENTS))
+    print("\n".join(str(next(event_gen)) for _ in range(10)))
 
     print("\n=== Stream Analytics ===")
-
     stream_analytics()
 
     print("\n=== Generator Demonstration ===")
@@ -449,6 +445,7 @@ if __name__ == "__main__":
     fib = fibonacci_gen()
     prime = prime_gen()
     n = 10
+
     print(f"Fibonacci sequence (first {n}):",
           ", ".join(str(next(fib)) for _ in range(n)))
     print(f"Prime numbers (first {n}):",
