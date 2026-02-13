@@ -34,7 +34,7 @@ class SpellCard(Card):
     def resolve_effect(self, targets: list) -> dict:
         for target in targets:
             if type(target) is CreatureCard:
-                if "damage" in self.effect_type.lower():
+                if target.health > 0 and "damage" in self.effect_type.lower():
                     damage = 3
                     target.health -= damage
                     return {

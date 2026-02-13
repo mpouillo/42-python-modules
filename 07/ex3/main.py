@@ -14,30 +14,35 @@ if __name__ == "__main__":
 
     print("Factory:", factory.__class__.__name__)
     print("Strategy:", strategy.get_strategy_name())
-    print("Available types:", pformat(factory.get_supported_types()))
+    print("Available types:",
+          pformat(factory.get_supported_types(), sort_dicts=False))
 
     print("\nSimulating aggressive turn...")
 
     hand = factory.create_themed_deck(3)
     enemy = factory.create_themed_deck(3)
     cards = [f"{card.name} ({card.cost})" for card in hand.values()]
+    e_cards = [f"{card.name} ({card.cost})" for card in enemy.values()]
 
     print("Hand:", f"[{', '.join(cards)}]")
+    print("Enemy hand:", f"[{', '.join(e_cards)}]")
 
     print("\nTurn execution:")
 
     print("Strategy:", strategy.get_strategy_name())
-    print("Targets:", [card.name for card in enemy.values()])
     print("Actions:")
     pprint(strategy.execute_turn([card for card in hand.values()],
                                  [card for card in enemy.values()]),
            sort_dicts=False)
 
+    print("\nGame Report:")
+
     game_engine = GameEngine()
     game_engine.configure_engine(factory, strategy)
-
-    print("\nGame Report:")
-    pprint(game_engine.simulate_turn())
+    game_engine.simulate_turn()
+    pprint(game_engine.get_engine_status(), sort_dicts=False)
+    game_engine.simulate_turn()
+    pprint(game_engine.get_engine_status(), sort_dicts=False)
 
     print("\nAbstract Factory + Strategy Pattern: "
           "Maximum flexibility achieved!")

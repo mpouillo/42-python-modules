@@ -6,30 +6,37 @@ from ex3.GameStrategy import GameStrategy
 class AggressiveStrategy(GameStrategy):
     def execute_turn(self, hand: list, battlefield: list) -> dict:
         cards_played = []
-        targets_attacked = []
+        targets_attacked = set()
         mana_used = 0
         damage_dealt = 0
 
+        battlefield = self.prioritize_targets(battlefield)
+
         for card in hand:
-            if type(card) is SpellCard:
+            if isinstance(card, SpellCard):
                 cards_played.append(card.name)
                 mana_used += card.cost
                 effect = card.resolve_effect(battlefield)
-                damage_dealt += (effect.get("damage", 0))
-                targets_attacked += effect.get("target")
-            elif type(card) is CreatureCard:
-                target = next(iter(battlefield), None)
-                mana_used += card.cost
+                damage_dealt += effect.get("damage")
+                target = effect.get("target")
                 if target:
+                    targets_attacked.add(target)
+            elif isinstance(card, CreatureCard):
+                target = None
+                for b in battlefield:
+                    if isinstance(b, CreatureCard):
+                        target = b
+                        break
+                if target is not None:
+                    mana_used += card.cost
                     cards_played.append(card.name)
                     result = card.attack_target(target)
-                    damage_dealt += result.get("damage_dealt", 0)
-                    if result.get("target") is not None:
-                        targets_attacked += result.get("target")
+                    damage_dealt += result.get("damage_dealt")
+                    targets_attacked.add(result.get("target"))
         return {
             "cards_played": cards_played,
             "mana_used": mana_used,
-            "targets_attacked": [t for t in targets_attacked],
+            "targets_attacked": [*targets_attacked],
             "damage_dealt": damage_dealt
         }
 
@@ -37,4 +44,5 @@ class AggressiveStrategy(GameStrategy):
         return "AggressiveStrategy"
 
     def prioritize_targets(self, available_targets: list) -> list:
-        return available_targets
+        return [card for card in available_targets
+                if isinstance(card, CreatureCard) and card.health > 2]
