@@ -216,6 +216,7 @@ __marimo__/
 .streamlit/secrets.toml
 
 # Utilities
+00/main.py
 03/advanced_data_helper.py
 03/data_generator.py
 03/exercise_0_help.py
