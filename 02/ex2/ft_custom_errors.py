@@ -5,14 +5,19 @@ class GardenError(Exception):
 
 
 class PlantError(GardenError):
-    def __init__(self, name: str):
-        message = f"The {name} plant is wilting!"
+    def __init__(self, name: str | None = None, message: str | None = None):
+        if message is None:
+            if name is not None:
+                message = f"The {name} plant is wilting!"
+            else:
+                message = "The plant is wilting!"
         super().__init__(message)
 
 
 class WaterError(GardenError):
-    def __init__(self) -> None:
-        message = "Not enough water in the tank!"
+    def __init__(self, message: str | None = None) -> None:
+        if message is None:
+            message = "Not enough water in the tank!"
         super().__init__(message)
 
 

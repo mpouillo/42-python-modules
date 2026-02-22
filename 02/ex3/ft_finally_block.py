@@ -23,10 +23,13 @@ def water_plants(plant_list: list[Any]) -> None:
 
 def test_watering_system() -> None:
     print("=== Garden Watering System ===\n")
+
     print("Testing normal watering...")
     water_plants(["tomato", "lettuce", "carrots"])
+
     print("\nTesting with error...")
     water_plants(["tomato", None, "carrots"])
+
     print("\nCleanup always happens, even with errors!")
 
 

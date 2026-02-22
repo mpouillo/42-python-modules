@@ -19,9 +19,8 @@ def check_temperature(temp_str: int) -> int | None:
 
 
 def test_temperature_input() -> None:
-    values = [25, "abc", 100, -50]
-    for val in values:
-        temp = check_temperature(val)
+    for value in [25, "abc", 100, -50]:
+        temp = check_temperature(value)
         if temp:
             print(f"Temperature {temp}°C is perfect for plants!")
         print()

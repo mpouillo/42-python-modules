@@ -1,35 +1,32 @@
 #!/usr/bin/env python3
 
-from typing import Any
-
-
 class GardenError(Exception):
     pass
 
 
 class SunlightError(GardenError):
-    def __init__(self, name: str, message: Any = None):
+    def __init__(self, name: str = "Plant", message: str | None = None):
         if message is None:
-            message = f"Insufficient sunlight, {name} is wilting!"
+            message = f"Sunlight too high or low, {name} is wilting!"
         super().__init__(message)
 
 
 class WaterHighError(GardenError):
-    def __init__(self, message: Any = None):
+    def __init__(self, message: str | None = None):
         if message is None:
             message = "Too much water in tank"
         super().__init__(message)
 
 
 class WaterLowError(GardenError):
-    def __init__(self, message: Any = None):
+    def __init__(self, message: str | None = None):
         if message is None:
             message = "Not enough water in tank"
         super().__init__(message)
 
 
 class EmptyPlantName(GardenError):
-    def __init__(self, message: Any = None):
+    def __init__(self, message: str | None = None):
         if message is None:
             message = "Plant name cannot be empty!"
         super().__init__(message)
@@ -40,11 +37,11 @@ class GardenManager:
         self.plant_list = []
 
     @property
-    def plant_list(self) -> list[Any]:
+    def plant_list(self) -> list['Plant']:
         return self._plant_list
 
     @plant_list.setter
-    def plant_list(self, plant_list: list[str]) -> None:
+    def plant_list(self, plant_list: list['Plant']) -> None:
         if type(plant_list) is not list:
             raise ValueError
         else:
@@ -53,8 +50,8 @@ class GardenManager:
     class Plant:
         def __init__(self,
                      name: str,
-                     sunlight: int = 10,
-                     water: int = 10):
+                     water: int = 10,
+                     sunlight: int = 10):
             self.name = name
             self.sunlight = sunlight
             self.water = water
@@ -76,9 +73,9 @@ class GardenManager:
 
         @sunlight.setter
         def sunlight(self, value: int) -> None:
-            self._sunlight = value
+            self._sunlight = max(0, value)
             if self.sunlight > 10:
-                self._sunlight = 10
+                raise SunlightError(self.name)
             if self.sunlight < 1:
                 raise SunlightError(self.name)
 
@@ -88,7 +85,7 @@ class GardenManager:
 
         @water.setter
         def water(self, value: int) -> None:
-            self._water = value
+            self._water = max(0, value)
             if self.water < 1:
                 raise WaterLowError
             if self.water > 10:
@@ -150,12 +147,12 @@ if __name__ == "__main__":
     gm = GardenManager()
 
     print("\nAdding plants to garden...")
-    gm.add_plant("tomato", 8, 1)
+    gm.add_plant("tomato", 4, 8)
     gm.add_plant("lettuce", 10, 10)
     gm.add_plant("")
 
     print("\nWatering plants...")
-    gm.water_plants(5)
+    gm.water_plants()
 
     print("\nChecking plant health...")
     gm.check_health()
