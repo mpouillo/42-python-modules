@@ -5,14 +5,17 @@
 class Plant:
     """Create a plant object."""
 
-    def __init__(self, name: str = "None", height: int = 0, age: int = 0):
+    def __init__(self,
+                 name: str = "None",
+                 height: int = 0,
+                 age: int = 0):
         """
-        Initialize plant object.
+        Initialize plant object with name, height and age.
 
         Keyword arguments:
         name    -- name of the plant object
-        height  -- height of the plant object
-        age     -- age of the plant object
+        height  -- height of the plant object, in cm
+        age     -- age of the plant object, in days
         """
         self.set_name(name)
         self.set_height(height)
@@ -20,41 +23,36 @@ class Plant:
 
     def set_name(self, name: str) -> None:
         """Set plant name."""
-        self._name = name
+        self.__name = name
 
     def set_height(self, height: int) -> None:
-        """Set plant height."""
+        """Securely set plant height."""
         if height < 0:
-            print(f"Invalid operation attempted: height {height}cm [REJECTED]")
             print("Security: Negative height rejected")
         else:
-            self._height = height
+            self.__height = height
 
     def set_age(self, age: int) -> None:
-        """Set plant age."""
+        """Securely set plant age."""
         if age < 0:
-            print(
-                "Invalid operation attempted: age "
-                f"{age} day{'s' if age != -1 else ''} [REJECTED]"
-                )
             print("Security: Negative age rejected")
         else:
-            self._age = age
+            self.__age = age
 
     def get_name(self) -> str:
         """Return plant name."""
-        return (self._name)
+        return self.__name
 
     def get_height(self) -> int:
         """Return plant height."""
-        return (self._height)
+        return self.__height
 
     def get_age(self) -> int:
         """Return plant age."""
-        return (self._age)
+        return self.__age
 
     def get_info(self) -> str:
-        """Return information (name, height, age) about the plant."""
+        """Return information (name, height, days) about the plant."""
         return (
             f"{self.get_name()} ({type(self).__name__}): "
             f"{self.get_height()}cm, {self.get_age()} "
@@ -76,7 +74,6 @@ class Flower(Plant):
         """
         super().__init__(name, height, age)
         self.set_color(color)
-        self._bloom = False
 
     def set_color(self, color: str = "None") -> None:
         """Set flower color."""
@@ -87,8 +84,7 @@ class Flower(Plant):
         return (self._color)
 
     def bloom(self) -> None:
-        """Set bloom to True and print info."""
-        self._bloom = True
+        """Print info about bloom status."""
         print(f"{self.get_name()} is blooming beautifully!")
 
     def get_info(self) -> str:
@@ -111,20 +107,18 @@ class Tree(Plant):
         """
         super().__init__(name, height, age)
         self.set_trunk_diameter(trunk_diameter)
-        self._shade = 67
 
     def set_trunk_diameter(self, diameter: int) -> None:
         """Set tree diameter."""
-        self._trunk_diameter = diameter
+        self.__trunk_diameter = diameter
 
     def get_diameter(self) -> int:
         """Return tree diameter."""
-        return (self._trunk_diameter)
+        return (self.__trunk_diameter)
 
     def produce_shade(self) -> None:
         """Print information about the shade cast by the tree."""
-        print(f"{self.get_name()} provides "
-              f"{self._shade} square meters of shade")
+        print(f"{self.get_name()} provides 78 square meters of shade")
 
     def get_info(self) -> str:
         """Return information (name, height, age, diameter) about the plant."""
@@ -134,7 +128,8 @@ class Tree(Plant):
 class Vegetable(Plant):
     """Create a vegetable object."""
 
-    def __init__(self, name: str, height: int, age: int, season: str):
+    def __init__(self, name: str, height: int, age: int,
+                 season: str, nutritional_value: str = "None"):
         """
         Initialize vegetable object.
 
@@ -146,41 +141,44 @@ class Vegetable(Plant):
         """
         super().__init__(name, height, age)
         self.set_harvest_season(season)
+        self.set_nutritional_value(nutritional_value)
 
     def set_harvest_season(self, season: str) -> None:
         """Set vegetable harvest season."""
-        self._harvest_season = season
+        self.__harvest_season = season
 
     def get_harvest_season(self) -> str:
         """Return vegetable harvest season."""
-        return (self._harvest_season)
+        return (self.__harvest_season)
 
     def set_nutritional_value(self, value: str) -> None:
         """Set vegetable nutritional value."""
-        self._nutritional_value = value
+        self.__nutritional_value = value
 
     def get_nutritional_value(self) -> str:
         """Return vegetable nutritional value."""
-        return (f"{self.get_name()} is rich in {self._nutritional_value}")
+        return (f"{self.get_name()} is rich in {self.__nutritional_value}")
 
     def get_info(self) -> str:
         """Return information (name, height, age, harvest season) \
         about the plant."""
-        return f"{super().get_info()}, {self.get_harvest_season()}"
+        return f"{super().get_info()}, {self.get_harvest_season()} harvest"
 
 
 if __name__ == "__main__":
     print("=== Garden Plant Types ===")
 
-    flower = Flower("Begonia", 30, 60, "pink")
+    flower = Flower("Rose", 25, 30, "red")
+
     print(f"{flower.get_info()}")
     flower.bloom()
 
-    tree = Tree("Weeping Willow", 1500, 10950, 300)
+    tree = Tree("Oak", 500, 1825, 50)
+
     print(f"\n{tree.get_info()}")
     tree.produce_shade()
 
-    vegetable = Vegetable("Sweet potato", 20, 10, "Autumn")
-    vegetable.set_nutritional_value("vitamin A")
+    vegetable = Vegetable("Tomato", 80, 90, "summer", "vitamin C")
+
     print(f"\n{vegetable.get_info()}")
     print(vegetable.get_nutritional_value())

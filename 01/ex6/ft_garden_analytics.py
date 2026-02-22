@@ -123,20 +123,20 @@ class FloweringPlant(Plant):
     @property
     def color(self) -> str:
         """Update flowering plant color."""
-        return self._color
+        return self.__color
 
     @color.setter
     def color(self, color: str) -> None:
-        self._color = color
+        self.__color = color
 
     @property
     def bloom(self) -> bool:
         """Update flowering plant bloom status."""
-        return self._bloom
+        return self.__bloom
 
     @bloom.setter
     def bloom(self, status: bool) -> None:
-        self._bloom = status
+        self.__bloom = status
 
 
 class PrizeFlower(FloweringPlant):
@@ -264,9 +264,8 @@ class GardenManager:
             score = 0
             for p in plants:
                 score += p.height
-                score += p.total_growth
                 if isinstance(p, PrizeFlower):
-                    score += p.prize_value
+                    score += p.prize_value * 4
             return score
 
         @staticmethod
@@ -306,11 +305,11 @@ if __name__ == "__main__":
     print("=== Garden Management System Demo ===\n")
 
     gm = GardenManager.create_garden_network()
-    gm.add_plant("Alice", Plant("Pine Tree", 358, 1500))
-    gm.add_plant("Alice", FloweringPlant("Wisteria", 87, 10, "purple", True))
-    gm.add_plant("Alice", PrizeFlower("Begonia", 33, 30, "pink", False, 10))
-    gm.add_plant("Bob", FloweringPlant("Cosmos", 30, 5, "purple", False))
-    gm.add_plant("Bob", PrizeFlower("Spider Lily", 40, 20, "red", True, 20))
+    gm.add_plant("Alice", Plant("Oak Tree", 100, 1825))
+    gm.add_plant("Alice", FloweringPlant("Rose", 25, 30, "red", True))
+    gm.add_plant("Alice", PrizeFlower("Sunflower", 50, 60, "yellow", True, 10))
+    gm.add_plant("Bob", FloweringPlant("Cosmos", 32, 5, "purple", False))
+    gm.add_plant("Bob", PrizeFlower("Begonia", 40, 20, "pink", False, 5))
     print("")
 
     gm.grow_plants("Alice", 1)

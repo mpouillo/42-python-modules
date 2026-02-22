@@ -8,30 +8,31 @@ class Plant:
     def __init__(self,
                  name: str = "None",
                  height: int = 0,
-                 lifetime: int = 0):
+                 days: int = 0):
         """
-        Initialize plant object with name, height and lifetime.
+        Initialize plant object with name, height and days.
 
         Keyword arguments:
-        name        -- name of the plant object
-        height      -- height of the plant object
-        lifetime    -- age of the plant object
+        name        name of the plant object
+        height      height of the plant object, in cm
+        days        age of the plant object, in days
         """
         self.name: str = name
         self.height: int = height
-        self.lifetime: int = lifetime
+        self.days: int = days
 
     def grow(self, size: int = 1) -> None:
         """Increase plant size by 'size'."""
         self.height += size
 
     def age(self, days: int = 1) -> None:
-        """Increase plant lifetime by 'days'."""
-        self.lifetime += days
+        """Increase plant days by 'days'."""
+        self.days += days
 
     def get_info(self) -> str:
-        """Return information (name, height, lifetime) about the plant."""
-        return f"{self.name}: {self.height}cm, {self.lifetime} days old"
+        """Return information (name, height, days) about the plant."""
+        return (f"{self.name}: {self.height}cm, "
+                f"{self.days} day{'s' if self.days > 1 else ''} old")
 
 
 def ft_plant_factory(plants: list[tuple[str, int, int]]) -> None:
@@ -39,8 +40,8 @@ def ft_plant_factory(plants: list[tuple[str, int, int]]) -> None:
     print("=== Plant Factory Output ===")
 
     count = 0
-    for plant in plants:
-        print(f"Created: {Plant(*plant).get_info()}")
+    for blueprint in plants:
+        print(f"Created: {Plant(*blueprint).get_info()}")
         count += 1
 
     print(f"\nTotal plants created: {count}")

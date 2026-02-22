@@ -8,30 +8,31 @@ class Plant:
     def __init__(self,
                  name: str = "None",
                  height: int = 0,
-                 lifetime: int = 0):
+                 days: int = 0):
         """
-        Initialize plant object with name, height and lifetime.
+        Initialize plant object with name, height and days.
 
         Keyword arguments:
-        name        -- name of the plant object
-        height      -- height of the plant object
-        lifetime    -- age of the plant object
+        name        name of the plant object
+        height      height of the plant object, in cm
+        days        age of the plant object, in days
         """
         self.name: str = name
         self.height: int = height
-        self.lifetime: int = lifetime
+        self.days: int = days
 
     def grow(self, size: int = 1) -> None:
         """Increase plant size by 'size'."""
         self.height += size
 
     def age(self, days: int = 1) -> None:
-        """Increase plant lifetime by 'days'."""
-        self.lifetime += days
+        """Increase plant days by 'days'."""
+        self.days += days
 
     def get_info(self) -> str:
-        """Return information (name, height, lifetime) about the plant."""
-        return f"{self.name}: {self.height}cm, {self.lifetime} days old"
+        """Return information (name, height, days) about the plant."""
+        return (f"{self.name}: {self.height}cm, "
+                f"{self.days} day{'s' if self.days > 1 else ''} old")
 
 
 if __name__ == "__main__":
@@ -42,9 +43,10 @@ if __name__ == "__main__":
     print(f"=== Day {day} ===")
     print(f"{plant.get_info()}")
 
-    day += 6
-    plant.grow(6)
-    plant.age(6)
+    time_elapsed = 6
+    day += time_elapsed
+    plant.grow(time_elapsed)
+    plant.age(time_elapsed)
 
     print(f"=== Day {day} ===")
     print(f"{plant.get_info()}")

@@ -6,20 +6,20 @@ class Plant:
     """Create a plant object."""
 
     def __init__(self,
-                 name: str = "Unknown",
+                 name: str = "None",
                  height: int = 0,
-                 age: int = 0):
+                 days: int = 0):
         """
-        Initialize plant object with name, height and age.
+        Initialize plant object with name, height and days.
 
         Keyword arguments:
-        name    -- name of the plant object
-        height  -- height of the plant object
-        age     -- age of the plant object
+        name        name of the plant object
+        height      height of the plant object, in cm
+        days        age of the plant object, in days
         """
-        self.name = name
-        self.height = height
-        self.age = age
+        self.name: str = name
+        self.height: int = height
+        self.days: int = days
 
 
 if __name__ == "__main__":
@@ -29,6 +29,9 @@ if __name__ == "__main__":
 
     print("=== Garden Plant Registry ===")
 
-    print(f"{rose.name}: {rose.height}cm, {rose.age} days old")
-    print(f"{sunflower.name}: {sunflower.height}cm, {sunflower.age} days old")
-    print(f"{cactus.name}: {cactus.height}cm, {cactus.age} days old")
+    print(f"{rose.name}: {rose.height}cm, "
+          f"{rose.days} day{'s' if rose.days > 1 else ''} old")
+    print(f"{sunflower.name}: {sunflower.height}cm, "
+          f"{sunflower.days} day{'s' if sunflower.days > 1 else ''} old")
+    print(f"{cactus.name}: {cactus.height}cm, "
+          f"{cactus.days} day{'s' if cactus.days > 1 else ''} old")
