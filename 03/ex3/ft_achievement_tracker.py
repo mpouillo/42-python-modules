@@ -2,6 +2,7 @@
 
 if __name__ == "__main__":
     print("=== Achievement Tracker System ===\n")
+
     alice = {
         "name": "alice",
         "achievements": {
@@ -39,30 +40,27 @@ if __name__ == "__main__":
             f"{player.get('achievements')}"
             )
 
-    print("=== Achievement Analytics ===\n")
+    print("\n=== Achievement Analytics ===")
 
+    # List of len(players) sets of achievements
     achievements = [p["achievements"] for p in players]
 
-    all = set.union(*achievements)
-    print(f"All unique achievements: {all if len(all) > 0 else None}")
-    print(f"Total unique achievements: {len(all)}")
-    print()
+    unique_ach = set.union(*achievements)
+    print(f"All unique achievements: {all if len(unique_ach) > 0 else None}")
+    print(f"Total unique achievements: {len(unique_ach)}")
 
     common = set.intersection(*achievements)
-    print(f"Common to all players: {common if len(common) > 0 else None}")
+    print(f"\nCommon to all players: {common if len(common) > 0 else None}")
 
-    shared = set()
+    shared_ach = set()
     for i in range(len(players)):
         for j in range(i + 1, len(players)):
-            shared.update(achievements[i] & achievements[j])
+            shared_ach.update(achievements[i] & achievements[j])
 
-    rare = all - shared
+    rare = unique_ach - shared_ach
     print(f"Rare achievements (1 player): {rare if len(rare) > 0 else None}")
-    print()
 
-    print("Alice vs Bob common: "
-          f"{set.intersection(alice['achievements'], bob['achievements'])}")
-    print("Alice unique: "
-          f"{alice['achievements'] - bob['achievements']}")
-    print("Bob unique: "
-          f"{bob['achievements'] - alice['achievements']}")
+    print("\nAlice vs Bob common:",
+          set.intersection(alice['achievements'], bob['achievements']))
+    print("Alice unique:", alice['achievements'] - bob['achievements'])
+    print("Bob unique:", bob['achievements'] - alice['achievements'])

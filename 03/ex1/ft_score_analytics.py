@@ -5,28 +5,38 @@ import sys
 
 def ft_score_analytics() -> None:
     print("=== Player Score Analytics ===")
+
+    # Return if no arguments passed
     if len(sys.argv) == 1:
         print(f"No scores provided. "
-              f"Usage: python3 {sys.argv[0]} <score1> <score2> ....")
-    else:
-        args = sys.argv[1:]
-        try:
-            for arg in args:
-                int(arg)
-        except ValueError as e:
-            print(f"Error processing scores: {e}")
-            return
-        print(f"Scores processed: {args}")
-        len_args = len(args)
-        print(f"Total players: {len_args}")
-        sum_args = sum(int(x) for x in args)
-        print(f"Total score: {sum_args}")
-        print("Average score: " + "{:.1f}".format(sum_args / len_args))
-        high = max(int(x) for x in args)
-        print(f"High score: {high}")
-        low = min(int(x) for x in args)
-        print(f"Low score: {low}")
-        print(f"Score range: {high - low}")
+              f"Usage: python3 {sys.argv[0]} <score1> <score2> ...")
+        return
+
+    # Remove program name from args
+    args = sys.argv[1:]
+
+    # Convert scores to int
+    try:
+        scores = [int(arg) for arg in args]
+    except ValueError as e:
+        print("Error processing scores:", e)
+        return
+
+    # Process scores
+    nb_scores = len(scores)
+    sum_scores = sum(int(x) for x in scores)
+    avg_score = "{:.1f}".format(sum_scores / nb_scores)
+    high_score = max(int(x) for x in scores)
+    low_score = min(int(x) for x in scores)
+    score_range = high_score - low_score
+
+    print("Scores processed:", scores)
+    print("Total players:", nb_scores)
+    print("Total score:", sum_scores)
+    print("Average score: ", avg_score)
+    print("High score:", high_score)
+    print("Low score:", low_score)
+    print("Score range:", score_range)
 
 
 if __name__ == "__main__":

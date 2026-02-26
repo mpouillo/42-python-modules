@@ -23,7 +23,7 @@ data = {
             'region': 'central'
         },
         'diana': {
-            'total_score': 2000,
+            'total_score': 2050,
             'achievements': [
                 'first_kill', 'level_10', 'treasure_hunter', 'winner'
             ],
@@ -72,15 +72,15 @@ if __name__ == "__main__":
 
     score_categories = {
         "high": sum(
-            1 for name, info in data['players'].items()
-            if int(info['total_score']) > 6000
+            1 for info in data['players'].values()
+            if int(info['total_score']) > 2200
         ),
         "medium": sum(
-            1 for name, info in data['players'].items()
-            if 6000 >= int(info['total_score']) >= 2000
+            1 for info in data['players'].values()
+            if 2200 >= int(info['total_score']) >= 2000
         ),
         "low": sum(
-            1 for name, info in data['players'].items()
+            1 for info in data['players'].values()
             if int(info['total_score']) < 2000
         )
     }
@@ -96,11 +96,11 @@ if __name__ == "__main__":
 
     print("\n=== Set Comprehension Examples ===")
 
-    unique_players = set(sorted(name for name in data['players'].keys()))
-    unique_achiev = set(sorted(data['achievements_list']))
-    active_regions = set(
-        sorted(info['region'] for info in data['players'].values())
-    )
+    unique_players = {name for name in data['players'].keys()}
+    unique_achiev = {
+        ach for p in data['players'].values() for ach in p['achievements']
+    }
+    active_regions = {info['region'] for info in data['players'].values()}
 
     print("Unique players:", unique_players)
     print("Unique achievements", unique_achiev)
@@ -122,5 +122,5 @@ if __name__ == "__main__":
     print("Total players:", total_players)
     print("Total unique achievements:", total_unique_achiev)
     print("Average score:", average_score)
-    print(f"Top performers: {top_performer_name} ({top_performer_score}), "
-          f"{top_performer_achiev_count} achievements")
+    print(f"Top performers: {top_performer_name} ({top_performer_score} "
+          f"points, {top_performer_achiev_count} achievements)")

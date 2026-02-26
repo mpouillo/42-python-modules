@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import math
+import sys
 
 
 def calculate_distance(tup1: tuple[int, int, int],
@@ -31,27 +32,42 @@ def str_to_coords(string: str) -> tuple[int, int, int]:
         print(f"Error details - Type: {type(e).__name__}, Args: (\"{e}\")")
 
 
-if __name__ == "__main__":
+def ft_coordinate_system():
     print("=== Game Coordinate System ===\n")
 
-    pos = (10, 20, 5)
+    if len(sys.argv) > 1:
+        try:
+            pos = tuple([int(sys.argv[1]),
+                         int(sys.argv[2]),
+                         int(sys.argv[3])])
+        except (ValueError, IndexError):
+            print("Invalid coordinates. Make sure to input 3 valid integers.\n"
+                  f"Usage: python3 {sys.argv[0]} x y z")
+            return
+    else:
+        pos = (10, 20, 5)
+
     print(f"Position created: {pos}")
 
-    orig = (0, 0, 0)
-    calculate_distance(pos, orig)
+    origin = (0, 0, 0)
+    calculate_distance(origin, pos)
     print()
 
     valid_pos = "3,4,0"
     print(f"Parsing coordinates: \"{valid_pos}\"")
-    calculate_distance(str_to_coords(valid_pos), orig)
+    calculate_distance(origin, str_to_coords(valid_pos))
     print()
 
     invalid_pos = "abc,def,ghi"
     print(f"Parsing invalid coordinates: \"{invalid_pos}\"")
-    calculate_distance(str_to_coords(invalid_pos), orig)
+    calculate_distance(origin, str_to_coords(invalid_pos))
     print()
 
     print("Unpacking demonstration:")
     pos = (3, 4, 0)
     print("Player at x={0}, y={1}, z={2}".format(*pos))
     print("Coordinates: X={0}, Y={1}, Z={2}".format(*pos))
+
+
+if __name__ == "__main__":
+    ft_coordinate_system()
