@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 if __name__ == "__main__":
+    print("=== CYBER ARCHIVES - PRESERVATION SYSTEM ===\n")
+
     entries = [
         "New quantum algorithm discovered",
         "Efficiency increased by 347%",
@@ -24,7 +26,9 @@ if __name__ == "__main__":
         f.close()
         print("\nData inscription complete. Storage unit sealed.")
         print(f"Archive '{filename}' ready for long-term preservation.")
+
     except FileNotFoundError:
         print("ERROR: Storage vault not found")
+
     except IOError:
         print("ERROR: Could not access storage vault")

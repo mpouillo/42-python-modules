@@ -4,12 +4,12 @@ import sys
 
 
 if __name__ == "__main__":
-    print("=== CYVER ARCHIVES - COMMUNICATION SYSTEM ===\n")
+    print("=== CYBER ARCHIVES - COMMUNICATION SYSTEM ===\n")
 
-    id = input("Input Stream active. Enter archivist ID: ")
+    arch_id = input("Input Stream active. Enter archivist ID: ")
     status = input("Input Stream active. Enter status report: ")
 
-    print(f"\n[STANDARD] Archive status from {id}: {status}",
+    print(f"\n[STANDARD] Archive status from {arch_id}: {status}",
           file=sys.stdout)
     print("[ALERT] System diagnostic: Communication channels verified",
           file=sys.stderr)
