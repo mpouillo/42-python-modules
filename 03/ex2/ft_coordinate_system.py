@@ -33,10 +33,10 @@ def str_to_coords(string: str) -> tuple[int, int, int]:
 
 
 def ft_coordinate_system():
-    print("=== Game Coordinate System ===\n")
-
     if len(sys.argv) > 1:
         try:
+            if len(sys.argv) > 4:
+                raise ValueError
             pos = tuple([int(sys.argv[1]),
                          int(sys.argv[2]),
                          int(sys.argv[3])])
@@ -46,6 +46,8 @@ def ft_coordinate_system():
             return
     else:
         pos = (10, 20, 5)
+
+    print("=== Game Coordinate System ===\n")
 
     print(f"Position created: {pos}")
 
