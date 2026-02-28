@@ -34,3 +34,5 @@ if __name__ == "__main__":
     pprint(spell_cast, sort_dicts=False)
     print("Mana channel:")
     pprint(mana_channel, sort_dicts=False)
+
+    print("\nMultiple interface implementation successful!")

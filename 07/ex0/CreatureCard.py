@@ -55,7 +55,7 @@ class CreatureCard(Card):
                 "combat_resolved": False
             }
 
-    def get_card_info(self):
+    def get_card_info(self) -> dict:
         info = super().get_card_info()
         info["type"] = "Creature"
         info["attack"] = self.attack

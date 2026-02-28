@@ -18,7 +18,7 @@ class FantasyCardFactory(CardFactory):
             case 3:
                 card = CreatureCard("Goblin", 3, "Uncommon", 2, 3)
             case _:
-                pass
+                card = CreatureCard("Snail", 1, "Common", 1, 1)
         return card
 
     def create_spell(self, name_or_power: str | int | None = None) -> Card:
@@ -40,7 +40,9 @@ class FantasyCardFactory(CardFactory):
                     "Lighting Bolt", 3, "Rare", "Deal 5 damage to target"
                 )
             case _:
-                pass
+                card = SpellCard(
+                    "Snowball", 1, "Common", "Deal 1 damage to target"
+                )
         return card
 
     def create_artifact(self, name_or_power: str | int | None = None) -> Card:
@@ -54,7 +56,9 @@ class FantasyCardFactory(CardFactory):
                     "Mana Ring", 2, "Uncommon", 10, "Permanent +3 mana"
                 )
             case _:
-                pass
+                card = ArtifactCard(
+                    "Wooden Ring", 1, "Common", 1, "No effect"
+                )
         return card
 
     def create_themed_deck(self, size: int) -> dict:

@@ -10,7 +10,7 @@ class TournamentCard(Card, Combatable, Rankable):
                  rarity: str,
                  physical_attack: int,
                  defense: int,
-                 health: int):
+                 health: int) -> None:
         super().__init__(name, cost, rarity)
         self.physical_attack = physical_attack
         self.defense = defense

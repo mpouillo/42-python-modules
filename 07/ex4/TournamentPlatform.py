@@ -1,8 +1,8 @@
 from ex4.TournamentCard import TournamentCard
 
 
-class TournamentPlatform():
-    def __init__(self):
+class TournamentPlatform:
+    def __init__(self) -> None:
         self.registered_cards = {}
         self.matches_played = 0
 
@@ -12,6 +12,13 @@ class TournamentPlatform():
         return card_id
 
     def create_match(self, card1_id: str, card2_id: str) -> dict:
+        if not card1_id or not card2_id:
+            return {
+                "winner": None,
+                "loser": None,
+                "winner_rating": None,
+                "loser_rating": None
+            }
         self.matches_played += 1
         card1 = self.registered_cards.get(card1_id)
         card2 = self.registered_cards.get(card2_id)

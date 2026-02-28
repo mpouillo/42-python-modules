@@ -5,8 +5,8 @@ from ex1.ArtifactCard import ArtifactCard
 import random
 
 
-class Deck():
-    def __init__(self, cards: list = []):
+class Deck:
+    def __init__(self, cards: list = []) -> None:
         self.cards = cards
 
     @property
@@ -14,7 +14,7 @@ class Deck():
         return self.__cards
 
     @cards.setter
-    def cards(self, cards) -> None:
+    def cards(self, cards: list) -> None:
         self.__cards = cards
 
     def add_card(self, card: Card) -> None:

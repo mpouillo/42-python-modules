@@ -1,6 +1,7 @@
 from ex0.Card import Card
 from ex2.Combatable import Combatable
 from ex2.Magical import Magical
+from typing import Any
 
 
 class EliteCard(Card, Combatable, Magical):
@@ -12,7 +13,7 @@ class EliteCard(Card, Combatable, Magical):
                  magical_attack: int,
                  defense: int,
                  health: int,
-                 spell_cost: int):
+                 spell_cost: int) -> None:
         super().__init__(name, cost, rarity)
         self.physical_attack = physical_attack
         self.magical_attack = magical_attack
@@ -25,7 +26,7 @@ class EliteCard(Card, Combatable, Magical):
         return super().play(game_state)
 
     # Combatable
-    def attack(self, target) -> dict:
+    def attack(self, target: Any) -> dict:
         target.defend(self.physical_attack)
         return {"attacker": self.name,
                 "target": target.name,

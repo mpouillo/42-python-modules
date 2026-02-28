@@ -13,6 +13,8 @@ class Card(ABC):
 
     @name.setter
     def name(self, name: str) -> None:
+        if name is None:
+            name = "None"
         self.__name = name
 
     @property
@@ -21,7 +23,7 @@ class Card(ABC):
 
     @cost.setter
     def cost(self, cost: int) -> None:
-        self.__cost = cost
+        self.__cost = max(0, cost)
 
     @property
     def rarity(self) -> str:
@@ -29,6 +31,8 @@ class Card(ABC):
 
     @rarity.setter
     def rarity(self, rarity: str) -> None:
+        if rarity is None:
+            rarity = "Undefined"
         self.__rarity = rarity
 
     @abstractmethod

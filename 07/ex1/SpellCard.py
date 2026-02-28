@@ -18,6 +18,8 @@ class SpellCard(Card):
 
     @effect_type.setter
     def effect_type(self, effect_type: str) -> None:
+        if effect_type is None:
+            effect_type = "No effect"
         self.__effect_type = effect_type
 
     def play(self, game_state: dict) -> dict:
