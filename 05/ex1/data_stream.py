@@ -9,22 +9,6 @@ class DataStream(ABC):
         self.stream_id: str = stream_id
         self.stream_type: str = "Generic stream"
 
-    @property
-    def stream_id(self) -> None:
-        return self._stream_id
-
-    @stream_id.setter
-    def stream_id(self, stream_id: str) -> None:
-        self._stream_id: str = stream_id
-
-    @property
-    def stream_type(self) -> str:
-        return self._stream_type
-
-    @stream_type.setter
-    def stream_type(self, stream_type: str) -> None:
-        self._stream_type = stream_type
-
     @abstractmethod
     def process_batch(self, data_batch: List[Any]) -> str:
         pass
@@ -32,66 +16,77 @@ class DataStream(ABC):
     def filter_data(self,
                     data_batch: List[Any],
                     criteria: Optional[str] = None) -> List[Any]:
-        return data_batch
+        return ([d for d in data_batch if criteria is None
+                 or (isinstance(d, str) and d in criteria)])
 
     def get_stats(self) -> Dict[str, Union[str, int, float]]:
-        return {}
+        return {
+            "stream_id": self.stream_id,
+            "stream_type": self.stream_type
+        }
 
 
 class SensorStream(DataStream):
     def __init__(self, stream_id: str) -> None:
         super().__init__(stream_id)
+        self.stream_type = "Environmental Data"
+        self.criteria = ["temp", "humidity", "pressure"]
 
     def process_batch(self, data_batch: List[Any]) -> str:
-        filtered_data = self.filter_data(data_batch)
+        readings = self.filter_data(data_batch, self.criteria)
+        if len(readings) == 0:
+            return "0 readings processed"
+
         total_val_count, total_tmp, avg_tmp, n = 0, 0, 0, 0
-        for data in filtered_data:
-            type, value = data.split(":", 1)
-            match type:
+        for data in readings:
+            r, v = data.split(":", 1)
+            match r:
                 case "temp":
-                    total_tmp += float(value)
+                    total_tmp += float(v)
                     total_val_count += 1
                     n += 1
                 case "pressure":
                     n += 1
                 case "humidity":
                     n += 1
-        if total_val_count:
+        if total_val_count > 0:
             avg_tmp = total_tmp / total_val_count
-        return f"{n} readings processed, avg. temp: {avg_tmp}°C"
+        return f"{n} readings processed, avg temp: {avg_tmp}°C"
 
     def filter_data(self,
                     data_batch: List[Any],
                     criteria: Optional[str] = None) -> List[Any]:
-        filtered_data = []
-        if not criteria:
-            criteria = ["temp", "pressure", "humidity"]
-        for data in data_batch:
-            try:
-                type, value = data.split(":", 1)
-                if type not in criteria:
-                    raise ValueError
-                float(value)
-                filtered_data.append(data)
-            except (ValueError, TypeError):
-                continue
-        return filtered_data
+        try:
+            filtered_data = [
+                d for d in data_batch if isinstance(d, str) and ":" in d
+                and d.split(":")[0] in criteria
+                and (d.split(":")[1]
+                     .strip()
+                     .replace('-', '', 1)
+                     .replace('.', '', 1)
+                     .isdigit())
+            ]
+            return filtered_data
+        except Exception:
+            return []
 
     def get_stats(self) -> Dict[str, Union[str, int, float]]:
-        return {"name": "Sensor Stream",
-                "stream_id": self.stream_id,
-                "stream_type": "Environmental Data",
-                "data_type": "Sensor data"}
+        stats = super().get_stats()
+        stats["name"] = "Sensor Stream"
+        stats["data_type"] = "Sensor Data"
+        return stats
 
 
 class TransactionStream(DataStream):
     def __init__(self, stream_id: str) -> None:
         super().__init__(stream_id)
+        self.stream_type = "Financial Data"
+        self.criteria = ["buy", "sell"]
 
     def process_batch(self, data_batch: List[Any]) -> str:
-        filtered_data = self.filter_data(data_batch)
+        ops = self.filter_data(data_batch, self.criteria)
         net_flow, n = 0, 0
-        for data in filtered_data:
+        for data in ops:
             action, value = data.split(":", 1)
             match action:
                 case "buy":
@@ -100,38 +95,40 @@ class TransactionStream(DataStream):
                 case "sell":
                     net_flow -= int(value)
                     n += 1
-        return (f"{n} operations, " + "net flow {0:+} units".format(net_flow))
+        return (f"{n} operations, " + "net flow: {0:+} units".format(net_flow))
 
     def filter_data(self,
                     data_batch: List[Any],
                     criteria: Optional[str] = None) -> List[Any]:
-        filtered_data = []
-        if not criteria:
-            criteria = ["buy", "sell"]
-        for data in data_batch:
-            try:
-                type, value = data.split(":", 1)
-                if type not in criteria:
-                    raise ValueError
-                int(value)
-                filtered_data.append(data)
-            except (ValueError, TypeError):
-                continue
-        return filtered_data
+        try:
+            filtered_data = [
+                d for d in data_batch if isinstance(d, str) and ":" in d
+                and d.split(":")[0] in criteria
+                and (d.split(":")[1]
+                     .strip()
+                     .replace('-', '', 1)
+                     .replace('.', '', 1)
+                     .isdigit())
+            ]
+            return filtered_data
+        except Exception:
+            return []
 
     def get_stats(self) -> Dict[str, Union[str, int, float]]:
-        return {"name": "Transaction Stream",
-                "stream_id": self.stream_id,
-                "stream_type": "Financial Data",
-                "data_type": "Transaction data"}
+        stats = super().get_stats()
+        stats["name"] = "Transaction Stream"
+        stats["data_type"] = "Transaction data"
+        return stats
 
 
 class EventStream(DataStream):
     def __init__(self, stream_id: str) -> None:
         super().__init__(stream_id)
+        self.stream_type = "System Events"
+        self.criteria = ["error", "login", "logout"]
 
     def process_batch(self, data_batch: List[Any]) -> str:
-        filtered_data = self.filter_data(data_batch)
+        filtered_data = self.filter_data(data_batch, self.criteria)
         err_count, n = 0, 0
         for data in filtered_data:
             match data:
@@ -148,50 +145,47 @@ class EventStream(DataStream):
     def filter_data(self,
                     data_batch: List[Any],
                     criteria: Optional[str] = None) -> List[Any]:
-        filtered_data = []
-        if not criteria:
-            criteria = ["error", "login", "logout"]
-        for data in data_batch:
-            try:
-                if data not in criteria:
-                    raise ValueError
-                filtered_data.append(data)
-            except (ValueError, TypeError):
-                continue
-        return filtered_data
+        try:
+            filtered_data = [
+                d for d in data_batch if isinstance(d, str)
+                and ":" not in d and d in criteria
+            ]
+            return filtered_data
+        except Exception:
+            return []
 
     def get_stats(self) -> Dict[str, Union[str, int, float]]:
-        return {"name": "Event Stream",
-                "stream_id": self.stream_id,
-                "stream_type": "System Events",
-                "data_type": "Event data"}
+        stats = super().get_stats()
+        stats["name"] = "Event Stream"
+        stats["data_type"] = "Event Data"
+        return stats
 
 
 class StreamProcessor:
     @staticmethod
     def process_stream_batch(streams: List[DataStream],
                              data: List[Any]) -> None:
-        try:
-            for s in streams:
+        for s in streams:
+            try:
                 result = s.process_batch(data)
                 print(f"- {s.get_stats().get('data_type')}: {result}")
-        except Exception as e:
-            print(f"Error processing stream "
-                  f"{s.get_stats().get('stream_id')}: {e}")
+            except Exception as e:
+                print("Error processing stream "
+                      f"{s.get_stats().get('stream_id')}: {e}")
 
+    @staticmethod
     def filter_stream_batch(streams: List[DataStream],
                             data_batch: List[Any]) -> None:
         print("Stream filtering active: High-priority data only")
         crit_alerts, large_trans = 0, 0
         for s in streams:
-            data = s.filter_data(data_batch)
-            if s.get_stats().get("name") == "Event Stream":
-                for d in data:
-                    if d == "error":
-                        crit_alerts += 1
-            if s.get_stats().get("name") == "Transaction Stream":
-                for d in data:
-                    if int(d.split(":")[1]) > 150:
+            data = s.filter_data(data_batch, s.criteria)
+            for d in data:
+                if d == "error":
+                    crit_alerts += 1
+                elif ":" in d:
+                    action, val = d.split(":")
+                    if action in ["buy", "sell"] and float(val) > 150:
                         large_trans += 1
         return (f"{crit_alerts} critical sensor alerts, "
                 f"{large_trans} large transaction"

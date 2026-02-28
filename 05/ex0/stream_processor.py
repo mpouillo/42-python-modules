@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from typing import Any
+from typing import Any, List
 from abc import ABC, abstractmethod
 
 
@@ -46,6 +46,9 @@ class NumericProcessor(DataProcessor):
         except TypeError:
             return False
 
+    def format_output(self, result: str) -> str:
+        return super().format_output(result)
+
 
 class TextProcessor(DataProcessor):
     def __init__(self):
@@ -69,6 +72,9 @@ class TextProcessor(DataProcessor):
             return True
         except TypeError:
             return False
+
+    def format_output(self, result: str) -> str:
+        return super().format_output(result)
 
 
 class LogProcessor(DataProcessor):
@@ -97,7 +103,7 @@ class LogProcessor(DataProcessor):
         return result
 
 
-def interface(processor: list, data: Any) -> None:
+def interface(processor: List, data: Any) -> None:
     for p in processor:
         res = p.process(data)
         if res != "":

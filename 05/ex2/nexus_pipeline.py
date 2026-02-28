@@ -2,6 +2,10 @@
 
 from abc import ABC, abstractmethod
 from typing import Any, List, Dict, Union, Protocol
+from collections import namedtuple
+
+
+PerformanceStats = namedtuple('PerformanceStats', ['efficiency', 'time'])
 
 
 class ProcessingStage(Protocol):
@@ -10,13 +14,9 @@ class ProcessingStage(Protocol):
 
 
 class InputStage:
-    info = "Input validation and parsing"
-
     def process(self, data: Any) -> Dict:
         print("Input: ", end="")
-        if isinstance(data, dict):
-            print(data)
-        elif isinstance(data, str) and "," in data:
+        if isinstance(data, str) and "," in data:
             print(f"\"{data}\"")
         else:
             print(data)
@@ -24,8 +24,6 @@ class InputStage:
 
 
 class TransformStage:
-    info = "Data transformation and enrichment"
-
     def process(self, data: Any) -> Dict:
         print("Transform: ", end="")
         if isinstance(data, dict):
@@ -45,8 +43,6 @@ class TransformStage:
 
 
 class OutputStage:
-    info = "output formatting and delivery"
-
     def process(self, data: Any) -> str:
         print("Output: ", end="")
         if isinstance(data, dict):
@@ -67,7 +63,8 @@ class OutputStage:
 
 
 class ProcessingPipeline(ABC):
-    def __init__(self):
+    def __init__(self, pipeline_id: int) -> None:
+        self.pipeline_id = pipeline_id
         self.stages: List[ProcessingStage] = []
 
     def add_stage(self, stage: ProcessingStage) -> None:
@@ -79,13 +76,9 @@ class ProcessingPipeline(ABC):
 
 
 class JSONAdapter(ProcessingPipeline):
-    def __init__(self, pipeline_id: int) -> None:
-        super().__init__()
-        self.pipeline_id = pipeline_id
-
     def process(self, data: Any) -> Union[str, Any]:
-        if not self.validate(data):
-            return
+        if not isinstance(data, dict):
+            return None
         print("Processing JSON data through pipeline...")
         for stage in self.stages:
             try:
@@ -97,133 +90,110 @@ class JSONAdapter(ProcessingPipeline):
                 return
         return data
 
-    def validate(self, data: Any) -> Union[str, Any]:
-        if isinstance(data, dict):
-            return True
-        else:
-            return False
-
 
 class CSVAdapter(ProcessingPipeline):
-    def __init__(self, pipeline_id: int) -> None:
-        super().__init__()
-        self.pipeline_id = pipeline_id
-
     def process(self, data: Any) -> Union[str, Any]:
-        if not self.validate(data):
-            return
+        if not (isinstance(data, str) and "," in data):
+            return None
         print("Processing CSV data through pipeline...")
         for stage in self.stages:
             data = stage.process(data)
         return data
 
-    def validate(self, data: Any) -> Union[str, Any]:
-        if isinstance(data, str) and "," in data:
-            return True
-        else:
-            return False
-
 
 class StreamAdapter(ProcessingPipeline):
-    def __init__(self, pipeline_id: int) -> None:
-        super().__init__()
-        self.pipeline_id = pipeline_id
-
     def process(self, data: Any) -> Union[str, Any]:
-        if not self.validate(data):
-            return
+        if isinstance(data, dict) or (isinstance(data, str) and "," in data):
+            return None
         print("Processing Stream data through pipeline...")
         for stage in self.stages:
             data = stage.process(data)
         return data
 
-    def validate(self, data: Any) -> Union[str, Any]:
-        if isinstance(data, dict):
-            return False
-        elif isinstance(data, str) and "," in data:
-            return False
-        else:
-            return True
-
 
 class NexusManager():
-    def __init__(self, pipelines: List[ProcessingPipeline] = []) -> None:
-        self.pipelines = pipelines
+    def __init__(self) -> None:
+        self.pipelines: List[ProcessingPipeline] = []
 
-    def add_pipelines(self, pipeline: ProcessingPipeline) -> None:
+    def add_pipeline(self, pipeline: ProcessingPipeline) -> None:
         self.pipelines.append(pipeline)
 
     def process_data(self, data: Any) -> Union[str, Any]:
-        for p in self.pipelines:
-            out = p.process(data)
-            if out is not None:
-                return out
+        for pipe in self.pipelines:
+            result = pipe.process(data)
+            if result:
+                print(result)
+                break
 
 
 if __name__ == "__main__":
-    print("=== CODE NEXUS - ENTERPRISE PIPELINE SYSTEM ===")
+    print("=== CODE NEXUS - ENTERPRISE PIPELINE SYSTEM ===\n")
 
-    pipelines = [JSONAdapter(42), CSVAdapter(43), StreamAdapter(44)]
     print("Initializing Nexus Manager...")
     print("Pipeline capacity: 1000 streams/seconds\n")
-    manager = NexusManager(pipelines)
+
+    manager = NexusManager()
 
     print("Creating Data Processing Pipeline...")
-    print(f"Stage 1: {InputStage().info}")
-    print(f"Stage 2: {TransformStage().info}")
-    print(f"Stage 3: {OutputStage().info}")
+    print("Stage 1: Input validation and parsing")
+    print("Stage 2: Data transformation and enrichment")
+    print("Stage 3: Output formatting and delivery\n")
 
-    for p in pipelines:
-        p.add_stage(InputStage())
-        p.add_stage(TransformStage())
-        p.add_stage(OutputStage())
+    adapters = [JSONAdapter("J-1"), CSVAdapter("C-1"), StreamAdapter("S-1")]
 
-    print("\n=== Multi-format Data Processing ===\n")
+    for adapter in adapters:
+        adapter.add_stage(InputStage())
+        adapter.add_stage(TransformStage())
+        adapter.add_stage(OutputStage())
+        manager.add_pipeline(adapter)
 
-    data = [
-        {"sensor": "temp", "value": 23.5, "unit": "C"},
-        "user,action,timestamp",
-        "Real-time sensor stream"
-    ]
+    print("=== Multi-format Data Processing ===\n")
 
-    for d in data:
-        print(manager.process_data(d), "\n")
+    manager.process_data({"sensor": "temp", "value": 23.5, "unit": "C"})
+    print()
+    manager.process_data("user,action,timestamp")
+    print()
+    manager.process_data("Real-time sensor stream")
+    print()
 
     print("=== Pipeline Chaining Demo ===")
     print("Pipeline A -> Pipeline B -> Pipeline C")
 
-    solo_pipeline = [JSONAdapter(1)]
-    solo_pipeline[0].add_stage(InputStage())
-    solo_pipeline[0].add_stage(TransformStage())
-    solo_pipeline[0].add_stage(OutputStage())
+    json_pipe = JSONAdapter("J-2")
+    json_pipe.add_stage(InputStage())
+    json_pipe.add_stage(TransformStage())
+    json_pipe.add_stage(OutputStage())
+
+    manager2 = NexusManager()
+    manager2.add_pipeline(json_pipe)
 
     print("Data flow: Raw -> Processed -> Analyzed -> Stored\n")
 
     records = [
+        {"sensor": "temp", "value": 20.5, "unit": "C"},
+        {"sensor": "temp", "value": 21.5, "unit": "C"},
+        {"sensor": "temp", "value": 22.5, "unit": "C"},
         {"sensor": "temp", "value": 23.5, "unit": "C"},
-        {"sensor": "temp", "value": 23.5, "unit": "C"},
-        {"sensor": "temp", "value": 23.5, "unit": "C"},
-        {"sensor": "temp", "value": 23.5, "unit": "C"},
-        {"sensor": "temp", "value": 23.5, "unit": "C"},
-        {"sensor": "temp", "value": 23.5, "unit": "C"},
-        {"sensor": "temp", "value": 23.5, "unit": "C"},
-        {"sensor": "temp", "value": 23.5, "unit": "C"},
-        {"sensor": "temp", "value": 23.5, "unit": "C"},
-        {"sensor": "temp", "value": 23.5, "unit": "C"}
+        {"sensor": "temp", "value": 24.5, "unit": "C"},
+        {"sensor": "temp", "value": 25.5, "unit": "C"},
+        {"sensor": "temp", "value": 26.5, "unit": "C"},
+        {"sensor": "temp", "value": 27.5, "unit": "C"},
+        {"sensor": "temp", "value": 28.5, "unit": "C"},
+        {"sensor": "temp", "value": 29.5, "unit": "C"}
     ]
 
     for r in records:
-        NexusManager(solo_pipeline).process_data(records)
+        manager2.process_data(r)
 
+    perf = PerformanceStats("95%", "0.2s")
     print(f"Chain result: {len(records)} records "
           "processed through 3-stage pipeline")
-    print("Performance: 95% efficiency, 0.2s total processing time\n")
+    print(f"Performance: {perf.efficiency} efficiency, "
+          f"{perf.time} total processing time\n")
 
     print("=== Error Recovery Test ===")
     print("Simulating pipeline failure...")
 
-    processed_data = NexusManager(pipelines).process_data(
-        {"bad input": "yup"}
-    )
+    manager2.process_data({"bad input": "trigger_error"})
 
     print("\nNexus Integration complete. All systems operational.")
