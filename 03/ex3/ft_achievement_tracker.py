@@ -46,7 +46,8 @@ if __name__ == "__main__":
     achievements = [p["achievements"] for p in players]
 
     unique_ach = set.union(*achievements)
-    print(f"All unique achievements: {all if len(unique_ach) > 0 else None}")
+    print("All unique achievements: "
+          f"{unique_ach if len(unique_ach) > 0 else None}")
     print(f"Total unique achievements: {len(unique_ach)}")
 
     common = set.intersection(*achievements)

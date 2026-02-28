@@ -8,6 +8,8 @@ def parse_args(args: list) -> dict:
     try:
         for arg in args:
             item, qty = arg.split(":")
+            if item.strip() == "":
+                raise ValueError
             inv.update({item: int(qty)})
     except ValueError:
         sys.exit("Error while parsing arguments. Format: 'item:quantity'.")
