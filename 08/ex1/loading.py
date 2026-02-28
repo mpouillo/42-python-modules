@@ -4,12 +4,12 @@ from importlib.metadata import version, PackageNotFoundError
 
 
 def get_req_packages(file: str) -> list:
-    req = []
-    line = 1
-    with open(file) as f:
-        for line in f:
-            req.append(line.strip())
-    return req
+    try:
+        with open(file) as f:
+            req = [line.strip() for line in f if line.strip()]
+            return req
+    except FileNotFoundError:
+        return []
 
 
 def check_dependencies(req: list) -> int:
@@ -25,7 +25,7 @@ def check_dependencies(req: list) -> int:
     return valid_state
 
 
-def analyze_data() -> None:
+def analyze_data() -> str:
     import pandas
     import numpy
     import matplotlib.pyplot as plt

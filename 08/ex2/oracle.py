@@ -9,15 +9,25 @@ def security_check() -> None:
 
     file_config = dotenv_values(".env")
 
-    if not file_config.get("API_KEY"):
+    if file_config.get("API_KEY") != "Authenticated":
         print("[OK] No hardcoded secrets detected")
     else:
         print("[KO] Hardcoded secrets detected")
 
-    if None not in os.environ.values():
+    wrong_key = False
+    for key in [
+        "MATRIX_MODE",
+        "DATABASE_URL",
+        "API_KEY",
+        "LOG_LEVEL",
+        "ZION_ENDPOINT"
+    ]:
+        if key not in os.environ.keys():
+            print("[KO] Error in .env file")
+            wrong_key = True
+            break
+    if not wrong_key:
         print("[OK] .env file properly configured")
-    else:
-        print("[KO] Error in .env file")
 
     if os.environ.get("MATRIX_MODE") != file_config.get("MATRIX_MODE"):
         print("[OK] Production overrides available")

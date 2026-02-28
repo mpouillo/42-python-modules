@@ -36,6 +36,8 @@ def venv_output() -> None:
 
     print("Package installation path:")
     print(site.getsitepackages()[0])
+    print(site.getusersitepackages())
+    print(sys.path)
 
 
 if __name__ == "__main__":
