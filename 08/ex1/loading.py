@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
 from importlib.metadata import version, PackageNotFoundError
+from pathlib import Path
 
 
 def get_req_packages(file: str) -> list:
     try:
-        with open(file) as f:
+        file_path = Path(__file__).parent / file
+        with open(file_path) as f:
             req = [line.strip() for line in f if line.strip()]
             return req
     except FileNotFoundError:
